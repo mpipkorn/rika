@@ -106,15 +106,17 @@ module Rika
         :file
       elsif URI(@uri).scheme == "http" && Net::HTTP.get_response(URI(@uri)).is_a?(Net::HTTPSuccess)
         :http
+      elsif URI(@uri).scheme == "https" && Net::HTTP.get_response(URI(@uri)).is_a?(Net::HTTPSuccess)
+        :https
       else
-        raise IOError, "oops - Input (#{@uri}) is neither file nor http."
+        raise IOError, "oopsie - Input (#{@uri}) is neither file nor http."
       end
     end
 
     def input_stream
       if file?
         FileInputStream.new(java.io.File.new(@uri))
-      else # :http
+      else # :http or :https
         URL.new(@uri).open_stream
       end
     end
