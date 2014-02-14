@@ -106,7 +106,7 @@ module Rika
         :file
       elsif URI(@uri).scheme == "http" && Net::HTTP.get_response(URI(@uri)).is_a?(Net::HTTPSuccess)
         :http
-      elsif URI(@uri).scheme == "https" && Net::HTTP.get_response(URI(@uri)).is_a?(Net::HTTPSuccess)
+      elsif URI(@uri).scheme == "https" # && Net::HTTP.get_response(URI(@uri)).is_a?(Net::HTTPSuccess)
         :https
       else
         raise IOError, "oopsie - Input (#{@uri}) is neither file nor http."
