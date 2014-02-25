@@ -113,7 +113,7 @@ module Rika
         elsif URI(@uri).scheme == "https" && http.request_head(url.path).is_a?(Net::HTTPSuccess)
           :https
         else
-          raise IOError, "Input (#{@uri}) is neither file nor http."
+          raise IOError, "Input (#{@uri}) is neither file nor network location."
         end
       end
     end
