@@ -104,12 +104,17 @@ module Rika
     def get_input_type
       if File.exists?(@uri) && File.directory?(@uri) == false
         :file
-      elsif URI(@uri).scheme == "http" && Net::HTTP.get_response(URI(@uri)).is_a?(Net::HTTPSuccess)
-        :http
-      elsif URI(@uri).scheme == "https" # && Net::HTTP.get_response(URI(@uri)).is_a?(Net::HTTPSuccess)
-        :https
       else
-        raise IOError, "oopsie - Input (#{@uri}) is neither file nor http."
+        url = URI.parse(@uri)
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true if URI(@uri).scheme == "https"
+        if URI(@uri).scheme == "http" && http.request_head(url.path).is_a?(Net::HTTPSuccess)
+          :http
+        elsif URI(@uri).scheme == "https" && http.request_head(url.path).is_a?(Net::HTTPSuccess)
+          :https
+        else
+          raise IOError, "Input (#{@uri}) is neither file nor http."
+        end
       end
     end
 
@@ -122,3 +127,5 @@ module Rika
     end
   end
 end
+
+
